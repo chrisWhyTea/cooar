@@ -1,8 +1,10 @@
 # pylint: disable=no-member
-import pytest
 from unittest import mock
-from cooar.utilities import echo
+
 import click
+import pytest
+
+from cooar.utilities import echo
 
 
 class TestEcho:
