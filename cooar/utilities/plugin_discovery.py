@@ -19,9 +19,8 @@ def external_plugins():
     """
     plugins = []
     for _, name, _ in pkgutil.iter_modules():
-        if not name.startswith("cooar_"):
-            continue
-        plugins.extend(_get_plugins_from_module(name))
+        if name.startswith("cooar_"):
+            plugins.extend(_get_plugins_from_module(name))
     return plugins
 
 
