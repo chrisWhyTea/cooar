@@ -32,7 +32,9 @@ def _prefixed_message(prefix: str, msg: str, color: str, err: bool = False):
         click.echo(prefix_msg + message)
 
 
-def key_value_message(key: str, value: str, key_color: str, value_color: str):
+def key_value_message(
+    key: str, value: str, key_color: str = "blue", value_color: str = "bright_blue"
+):
     key_msg = click.style(key + ": ", fg=key_color)
     value_msg = click.style(value, fg=value_color)
     click.echo(key_msg + value_msg)

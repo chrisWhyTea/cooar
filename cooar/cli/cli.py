@@ -1,7 +1,7 @@
 import click
 
-from cooar.utilities import echo
-from cooar.utilities import cli_utils
+from cooar.plugin import CooarPlugin
+from cooar.utilities import cli_utils, echo
 
 
 @click.group(invoke_without_command=True)
@@ -15,7 +15,7 @@ from cooar.utilities import cli_utils
 @click.pass_context
 def cli(ctx, debug, info):
     ctx.ensure_object(dict)
-    ctx.obj["DEBUG"] = debug
-    echo.debug_msg("Debug mode is active")
+    cli_utils.set_debug(debug)
+
     if info is not None:
-        echo.debug_msg(f"Show info for {info}")
+        cli_utils.show_info(cli_utils.get_all_plugins().get(info))
