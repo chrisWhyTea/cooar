@@ -1,7 +1,10 @@
+import json
+
 import click
 
 import cooar_plugins
-from cooar.utilities import echo
+from cooar.plugin import CooarPlugin
+from cooar.utilities import echo, types
 from cooar.utilities.plugin_discovery import external_plugins, plugins_from_namespace
 
 
@@ -20,11 +23,15 @@ def get_all_plugin_names():
     return names
 
 
-def enums_to_string(e):
+def enum_list_to_string(enu):
     string = ""
-    for ei in e:
+    for ei in enu:
         string = string + ei.value + ", "
     return string[:-2]
+
+
+def enum_to_list(enu):
+    return [e.value for e in enu]
 
 
 def list_to_string(l):
@@ -46,10 +53,10 @@ def show_info(plugin):
     echo.key_value_message("URL", plugin.url)
     echo.key_value_message("Description", plugin.description)
     echo.key_value_message(
-        "Supported auth types", enums_to_string(plugin.supported_authtypes)
+        "Supported auth types", enum_list_to_string(plugin.supported_authtypes)
     )
     echo.key_value_message(
-        "Supported media types", enums_to_string(plugin.supported_mediatypes)
+        "Supported media types", enum_list_to_string(plugin.supported_mediatypes)
     )
     echo.key_value_message("Template strings", list_to_string(plugin.template_strings))
     for m in plugin.supported_mediatypes:
@@ -58,3 +65,4 @@ def show_info(plugin):
             echo.key_value_message(
                 f"{m.value.capitalize()} qualities", list_to_string(qualities)
             )
+    echo.key_value_message("Default template string", plugin.default_template)
