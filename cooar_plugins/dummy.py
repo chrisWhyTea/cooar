@@ -11,6 +11,7 @@ class DummyPlugin(CooarPlugin):
     supported_authtypes = (AuthType.NO_AUTH,)
     supported_qualities = {MediaType.VIDEO: ("SD", "HD", "FullHD")}
     template_strings = ("name", "lenght", "site")
+    default_template = ""
 
     def prepare(self, **kwargs):
         raise NotImplementedError()

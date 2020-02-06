@@ -49,6 +49,11 @@ class CooarPluginInfoABC(ABC):
     def template_strings(self) -> Tuple[str, ...]:
         raise NotImplementedError()
 
+    @property
+    @abstractmethod
+    def default_template(self) -> str:
+        raise NotImplementedError()
+
 
 class CooarPlugin(CooarPluginInfoABC, ABC):
     @abstractmethod
