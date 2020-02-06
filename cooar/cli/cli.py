@@ -1,7 +1,8 @@
 import click
 
 from cooar.plugin import CooarPlugin
-from cooar.utilities import cli_utils, echo
+from cooar.utilities import cli_utils, echo, types, validation
+from pathlib import Path
 
 
 @click.group(invoke_without_command=True)
@@ -19,3 +20,84 @@ def cli(ctx, debug, info):
 
     if info is not None:
         cli_utils.show_info(cli_utils.get_all_plugins().get(info))
+
+
+@cli.command()
+@click.argument(
+    "plugin",
+    metavar="plugin",
+    envvar="COOAR_PLUGIN",
+    type=click.Choice(cli_utils.get_all_plugin_names()),
+)
+@click.option("--username", "-u", type=click.STRING)
+@click.option("--password", "-p", type=click.STRING)
+@click.option("--cookies", "-c", type=click.STRING)
+@click.option("--authtoken", "-t", type=click.STRING)
+@click.option(
+    "--mediatype",
+    "-m",
+    type=click.Choice(cli_utils.enum_to_list(types.MediaType)),
+    multiple=True,
+)
+@click.option("--part_id", "-P", type=click.STRING)
+@click.option("--quality", "-q", type=click.STRING, multiple=True)
+@click.option("--template", "-T", type=click.STRING, multiple=True)
+@click.option("--replace/--no-replace", default=False)
+@click.option(
+    "--download_path",
+    "-d",
+    default=Path("."),
+    type=click.Path(exists=False, file_okay=False, dir_okay=True),
+)
+@click.pass_context
+def download(ctx, **kwargs):
+    package = validation.validate(**kwargs)
+
+    plugin = package["plugin"]()
+
+    plugin.prepare(**package)
+
+    files = plugin.collect(part_id=kwargs.get("part_id"))
+
+    for file in files:
+        if not ctx["SIMULATION"]:
+            file.prepare_path(kwargs.get("download_path"))
+            plugin.download(file, kwargs.get("replace"))
+        else:
+            echo.debug_msg("Simulated download")
+            continue
+            # SIMULATE DOWNLOAD
+    echo.debug_msg("Download complete")
+
+
+@cli.command()
+@click.argument(
+    "plugin",
+    metavar="plugin",
+    envvar="COOAR_PLUGIN",
+    type=click.Choice(cli_utils.get_all_plugin_names()),
+)
+@click.option("--username", "-u", type=click.STRING)
+@click.option("--password", "-p", type=click.STRING)
+@click.option("--cookies", "-c", type=click.STRING)
+@click.option("--authtoken", "-t", type=click.STRING)
+@click.option(
+    "--mediatype",
+    "-m",
+    type=click.Choice(cli_utils.enum_to_list(types.MediaType)),
+    multiple=True,
+)
+@click.option("--part_id", "-P", type=click.STRING)
+@click.option("--quality", "-q", type=click.STRING, multiple=True)
+@click.option("--template", "-T", type=click.STRING, multiple=True)
+@click.option("--replace/--no-replace", default=False)
+@click.option(
+    "--download_path",
+    "-d",
+    default=Path("."),
+    type=click.Path(exists=False, file_okay=False, dir_okay=True),
+)
+@click.pass_context
+def simulate(ctx, plugin, **kwargs):
+    ctx.obj["SIMULATION"] = True
+    ctx.forward(download)

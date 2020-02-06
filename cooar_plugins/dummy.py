@@ -14,10 +14,10 @@ class DummyPlugin(CooarPlugin):
     default_template = ""
 
     def prepare(self, **kwargs):
-        raise NotImplementedError()
+        pass
 
     def collect(self, part_id=None, **kwargs):
-        raise NotImplementedError()
+        return []
 
     def download(self, file, **kwargs):
-        raise NotImplementedError()
+        pass
