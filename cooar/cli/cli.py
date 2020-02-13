@@ -1,8 +1,10 @@
+from pathlib import Path
+from time import sleep
+
 import click
 
 from cooar.plugin import CooarPlugin
 from cooar.utilities import cli_utils, echo, types, validation
-from pathlib import Path
 
 
 @click.group(invoke_without_command=True)
@@ -58,15 +60,23 @@ def download(ctx, **kwargs):
     plugin.prepare(**package)
 
     files = plugin.collect(part_id=kwargs.get("part_id"))
-
-    for file in files:
-        if not ctx["SIMULATION"]:
-            file.prepare_path(kwargs.get("download_path"))
-            plugin.download(file, kwargs.get("replace"))
-        else:
-            echo.debug_msg("Simulated download")
-            continue
-            # SIMULATE DOWNLOAD
+    with click.progressbar(
+        files,
+        length=len(files),
+        label="Download files",
+        show_eta=True,
+        show_pos=True,
+        item_show_func=cli_utils.current_item_name,
+    ) as files_progress:
+        for f in files_progress:
+            if not ctx.obj["SIMULATION"]:
+                f.prepare_path(kwargs.get("download_path"))
+                plugin.download(f, kwargs.get("replace"))
+            else:
+                echo.debug_msg("Simulated download")
+                sleep(0.5)
+                continue
+                # SIMULATE DOWNLOAD
     echo.debug_msg("Download complete")
 
 

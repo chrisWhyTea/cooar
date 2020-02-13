@@ -3,6 +3,7 @@ import json
 import click
 
 import cooar_plugins
+from cooar.file import File
 from cooar.plugin import CooarPlugin
 from cooar.utilities import echo, types
 from cooar.utilities.plugin_discovery import external_plugins, plugins_from_namespace
@@ -66,3 +67,8 @@ def show_info(plugin):
                 f"{m.value.capitalize()} qualities", list_to_string(qualities)
             )
     echo.key_value_message("Default template string", plugin.default_template)
+
+
+def current_item_name(file: File):
+    if file is not None:
+        return file.file_path_string[1:]
