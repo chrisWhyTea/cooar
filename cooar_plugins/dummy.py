@@ -30,10 +30,8 @@ class DummyPlugin(CooarPlugin):
         file_counter = 0
         files = []
         while file_counter != amount:
-
             files.append(File(f"/files/file_{file_counter}.txt"))
             file_counter += 1
-
         return files
 
     def download(self, file, **kwargs):
