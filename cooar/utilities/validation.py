@@ -71,17 +71,18 @@ def quality_validation(plugin: CooarPlugin, quality):
             qd[m] = plugin.supported_qualities.get(m)[0]
     return qd
 
+
 def template_validation(plugin: CooarPlugin, templates):
     td = {}
     overwrite_all = None
     for template in templates:
         m, ts = template.split(":", 1)
-        if m == 'all':
+        if m == "all":
             overwrite_all = ts
             break
         m = types.MediaType(m)
         td[m] = ts
-    
+
     # Set default and overwirte
     for mediatype in plugin.supported_mediatypes:
         if overwrite_all is not None:
@@ -91,7 +92,6 @@ def template_validation(plugin: CooarPlugin, templates):
         else:
             continue
     return td
-        
 
 
 def validate(**kwargs):
@@ -111,7 +111,7 @@ def validate(**kwargs):
         "auth": auth_package,
         "mediatypes": mediatypes,
         "qualities": qualities,
-        "templates": templates
+        "templates": templates,
     }
     echo.debug_msg(f"Validated args: {return_value}")
     return return_value

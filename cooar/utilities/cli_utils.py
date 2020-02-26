@@ -6,7 +6,8 @@ import cooar_plugins
 from cooar.file import File
 from cooar.plugin import CooarPlugin
 from cooar.utilities import echo, types
-from cooar.utilities.plugin_discovery import external_plugins, plugins_from_namespace
+from cooar.utilities.plugin_discovery import (external_plugins,
+                                              plugins_from_namespace)
 
 
 def get_all_plugins():
@@ -71,4 +72,4 @@ def show_info(plugin):
 
 def current_item_name(file: File):
     if file is not None:
-        return file.file_path_string[1:]
+        return file.filename

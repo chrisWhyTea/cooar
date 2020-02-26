@@ -61,26 +61,32 @@ class TestEcho:
     @mock.patch("click.get_current_context", mock.MagicMock())
     @mock.patch("cooar.utilities.echo._prefixed_message", mock.MagicMock())
     @pytest.mark.parametrize("debug", [True, False])
-    def test_debug_msg(self,debug):
+    def test_debug_msg(self, debug):
         echo._prefixed_message.reset_mock()
-        class FakeContext():
-                obj = {}
-                if debug is True:
-                    obj['DEBUG'] = True
+
+        class FakeContext:
+            obj = {}
+            if debug is True:
+                obj["DEBUG"] = True
+
         click.get_current_context.return_value = FakeContext()
 
-        echo.debug_msg('Test')
+        echo.debug_msg("Test")
         if debug is True:
-            echo._prefixed_message.assert_called_once_with("DEBUG", 'Test', "bright_black")
+            echo._prefixed_message.assert_called_once_with(
+                "DEBUG", "Test", "bright_black"
+            )
         else:
             assert not echo._prefixed_message.called
 
     @mock.patch("cooar.utilities.echo._prefixed_message", mock.MagicMock())
     def test_warning_msg(self):
-        echo.warning_msg('Test')
-        echo._prefixed_message.assert_called_once_with("WARNING", 'Test', "bright_yellow")
+        echo.warning_msg("Test")
+        echo._prefixed_message.assert_called_once_with(
+            "WARNING", "Test", "bright_yellow"
+        )
 
     @mock.patch("cooar.utilities.echo._prefixed_message", mock.MagicMock())
     def test_error_msg(self):
-        echo.error_msg('Test')
-        echo._prefixed_message.assert_called_once_with("ERROR", 'Test', "bright_red")
+        echo.error_msg("Test")
+        echo._prefixed_message.assert_called_once_with("ERROR", "Test", "bright_red")

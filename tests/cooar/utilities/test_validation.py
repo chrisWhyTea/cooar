@@ -1,4 +1,5 @@
 import pytest
+
 from cooar.plugin import CooarPlugin
 from cooar.utilities import types, validation
 
@@ -13,8 +14,10 @@ class TestValidation:
             author = ""
             supported_mediatypes = (types.MediaType.VIDEO, types.MediaType.ARCHIVE)
             supported_authtypes = (types.AuthType.NO_AUTH,)
-            supported_qualities = {types.MediaType.VIDEO: ("SD", "HD", "FullHD"),
-            types.MediaType.ARCHIVE: ("SD", "HD")}
+            supported_qualities = {
+                types.MediaType.VIDEO: ("SD", "HD", "FullHD"),
+                types.MediaType.ARCHIVE: ("SD", "HD"),
+            }
             template_strings = ("name", "lenght", "site")
             default_template = "default"
 
@@ -50,8 +53,10 @@ class TestValidation:
             assert values[types.MediaType.VIDEO] == "default"
             assert values[types.MediaType.ARCHIVE] == "default"
 
-    @pytest.mark.parametrize("mediatype_list", [[],[types.MediaType.VIDEO],[types.MediaType.IMAGE]])
-    def test_mediatype_validation(self, plugin,mediatype_list):
+    @pytest.mark.parametrize(
+        "mediatype_list", [[], [types.MediaType.VIDEO], [types.MediaType.IMAGE]]
+    )
+    def test_mediatype_validation(self, plugin, mediatype_list):
         if mediatype_list == [types.MediaType.IMAGE]:
             with pytest.raises(SystemExit):
                 validation.mediatype_validation(plugin, mediatype_list)
@@ -63,19 +68,21 @@ class TestValidation:
             elif mediatype_list == [types.MediaType.VIDEO]:
                 assert len(values) == 1
                 assert values[0] == types.MediaType.VIDEO
-    
-    @pytest.mark.parametrize("qualities", [['video:HD'],['video:UHD'],[], ['image:HD']])
-    def test_quality_validation(self,plugin,qualities):
-        if qualities in (['image:HD'],['video:UHD']):
+
+    @pytest.mark.parametrize(
+        "qualities", [["video:HD"], ["video:UHD"], [], ["image:HD"]]
+    )
+    def test_quality_validation(self, plugin, qualities):
+        if qualities in (["image:HD"], ["video:UHD"]):
             with pytest.raises(SystemExit):
                 validation.quality_validation(plugin, qualities)
         else:
             values = validation.quality_validation(plugin, qualities)
-            if qualities == ['video:HD']:
-                assert values.get(types.MediaType.VIDEO) == 'HD'
-                assert values.get(types.MediaType.ARCHIVE) == 'SD'
+            if qualities == ["video:HD"]:
+                assert values.get(types.MediaType.VIDEO) == "HD"
+                assert values.get(types.MediaType.ARCHIVE) == "SD"
             elif qualities == []:
-                assert values.get(types.MediaType.VIDEO) == 'SD'
-                assert values.get(types.MediaType.ARCHIVE) == 'SD'
+                assert values.get(types.MediaType.VIDEO) == "SD"
+                assert values.get(types.MediaType.ARCHIVE) == "SD"
             else:
                 assert False

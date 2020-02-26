@@ -60,20 +60,23 @@ def download(ctx, **kwargs):
     plugin.prepare(**package)
 
     files = plugin.collect(part_id=kwargs.get("part_id"))
+
     with click.progressbar(
         files,
         length=len(files),
-        label="Download files",
-        show_eta=True,
+        label="Downloaded files",
         show_pos=True,
         item_show_func=cli_utils.current_item_name,
     ) as files_progress:
         for f in files_progress:
-            if not ctx.obj["SIMULATION"]:
-                f.prepare_path(kwargs.get("download_path"))
-                plugin.download(f, kwargs.get("replace"))
+            if not ctx.obj.get("SIMULATION"):
+                f.prepare_file_path(kwargs.get("download_path"))
+                if not kwargs.get("replace"):
+                    if f.absolute_file_path.exists():
+                        echo.debug_msg("Skip existing file")
+                        continue
+                plugin.download(f)
             else:
-                echo.debug_msg("Simulated download")
                 sleep(0.5)
                 continue
                 # SIMULATE DOWNLOAD

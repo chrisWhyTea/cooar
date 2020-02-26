@@ -20,8 +20,8 @@ class DummyPlugin(CooarPlugin):
     def collect(self, part_id=None, **kwargs):
         # The dummy always generates as many files provided by the part_id says,
         # normaly the part_id would be used to filter for a specific part of a website
-        # but in this case it provides the amount of Files. Obviously this will fail in
-        # case a non int castable string is given
+        # e.g. a author id, but in this case it provides the amount of Files.
+        # Obviously this will fail in case a non int castable string is given.
         try:
             amount = int(part_id) if part_id is not None else 100
         except ValueError:

@@ -35,3 +35,4 @@ class File:
         p = Path(download_path) / self.path
         p.mkdir(parents=True, exist_ok=True)
         self.absolute_file_path = p / self.filename
+        self.absolute_file_download_path = p / f"{self.filename}.cooar_dl"
