@@ -13,6 +13,7 @@ from cooar.utilities.plugin_discovery import (external_plugins,
 def get_all_plugins():
     plugin_dict = {}
     plugins = plugins_from_namespace(cooar_plugins)
+    plugins.extend(external_plugins())
     for plugin in plugins:
         plugin_dict[plugin.name] = plugin
     return plugin_dict

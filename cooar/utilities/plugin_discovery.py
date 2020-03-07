@@ -1,6 +1,11 @@
 import importlib
 import inspect
+import os
 import pkgutil
+import sys
+from pathlib import Path
+
+from click import get_current_context
 
 from cooar.plugin import CooarPlugin
 
@@ -16,8 +21,20 @@ def external_plugins():
     """
     Get all external plugins installed in the current environment 
     where the module name is starting with 'cooar_'
+
+    To use this the corresponding module needs a __init__.py that contains or imports the acctual plugin file.
+
+    To provide support for private plugins that are not shared via pypi you can put the plugin module into a '.cooarplugins' folder in your homedir
     """
     plugins = []
+
+    # external plugins will not be used when cooar is doing unit tests
+    if os.getenv("COOAR_IN_TEST_MODE"):
+        return plugins
+    private_plugins = Path.home() / ".cooarplugins"
+    if private_plugins.exists() and str(private_plugins) not in sys.path:
+        sys.path.append(str(private_plugins))
+
     for _, name, _ in pkgutil.iter_modules():
         if name.startswith("cooar_"):
             plugins.extend(_get_plugins_from_module(name))
