@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cooar-cli"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 repository = "https://github.com/chrisWhyTea/cooar-cli"
 authors = ["Christopher Schmitt <cooar@chris.yt>"]
